@@ -7,8 +7,8 @@ const app = express();
 const uri = "mongodb+srv://admin-souvik:test123@cluster0.r0k4t.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 mongoose.connect(uri)
 
-const Cat = mongoose.model('Cat', { name: String });
 
+const Cat = mongoose.model('Cat', { name: String });
 const kitty = new Cat({ name: 'Zildjian' });
 kitty.save().then(() => console.log('meow'));
 
