@@ -127,6 +127,37 @@ router.post("/signin", async (req, res) => {
     }
 });
 
+// filter is not working, has to fix
+router.get("/bulk", async (req, res) => {
+    const filter = req.body.filter || "";
+
+    const users = await User.find({
+        $or: [
+                {
+                    firstName: {
+                        "$regex": filter,
+                    }
+                },
+                {
+                    lastName: {
+                        "$regex": filter,
+                    }
+                },
+        ]
+    });
+
+    res.json({
+        user: users.map(user => ({
+            username: user.username,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            _id: user._id,
+        }))
+    });
+});
+
+
+// problem has to be fixed with this route
 router.put("/", authMiddleware, async (req, res) => {
     const { success } = updateBody.safeParse(req.body)
     if (!success) {
