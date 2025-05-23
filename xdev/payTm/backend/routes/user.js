@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const zod = require("zod");
-const { User } = require("../db");
+const { User, Account } = require("../db");
 const { JWT_SECRET } = require("../config");
 const jwt = require("jsonwebtoken");
 const authMiddleware = require("../middleware");
@@ -48,6 +48,7 @@ const updateBody = zod.object({
 })
 
 router.post("/signup", async (req, res) => {
+
     try{
         const { username, firstName, lastName, password } = req.body;
         const result = signupBody.safeParse({
@@ -76,6 +77,11 @@ router.post("/signup", async (req, res) => {
             firstName,
             lastName,
         });
+        // Account creation
+        const newAccount = await Account.create({
+            userId,
+            balance: 1 + Math.random() * 10000,
+        })
         const token = jwt.sign({
             id: newUser._id
         }, JWT_SECRET);
@@ -127,10 +133,9 @@ router.post("/signin", async (req, res) => {
     }
 });
 
-// filter is not working, has to fix
-router.get("/bulk", async (req, res) => {
-    const filter = req.body.filter || "";
 
+router.get("/bulk", async (req, res) => {
+    const filter = req.query.filter || "";
     const users = await User.find({
         $or: [
                 {
