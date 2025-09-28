@@ -5,17 +5,24 @@ function App () {
     const name = "Dead Comrade";
 
     const [count, setCount] = useState(0);
-    
-    const increase = () => {
-        setCount(count + 1);
+    const [message, setMessage] = useState(""); 
+    const [items, setItems] = useState([]);
+
+    const increase = () => setCount(count + 1);
+    const decrease = () => setCount(count - 1);
+    const reset = () => setCount(0);
+
+    const addItem = () => {
+        if(message.trim() !== "") {
+            setItems([...items, message]);
+            setMessage("");
+        }
     };
-    const decrease = () => {
-        // if (count > 0) 
-        setCount(count - 1);
+
+    const clearItems = () => {
+        setItems([]);
     };
-    const reset = () => {
-        setCount(0);
-    }
+
     return (
         <div className="text-center mt-8">
             <h1 className="text-4xl font-bold text-blue-600">Counter App</h1>
@@ -33,9 +40,28 @@ function App () {
             }
 
             <p className="text-2xl mt-4">Button clicked: {count} times</p> 
-            <Button operation={increase} label="Increase" />
-            <Button operation={decrease} label="Decrease" />
-            <Button operation={reset} label="Reset" />
+            <div className="mt-4 flex justify-center space-x-2">
+                <Button operation={increase} label="Increase" />
+                <Button operation={decrease} label="Decrease" />
+                <Button operation={reset} label="Reset" />
+            </div>
+
+            <div>
+                <label>Type a message: </label>
+                <input 
+                    type="text"
+                    value={message}
+                    onChange= {(e) => setMessage(e.target.value)}
+                    onKeyPress={(e) => e.key === "Enter" && addItem()}
+                    placholder="Enter your message here"
+                    className="w-full px-3 py-2 border rounded focus:outline-none focus:border-blue-500"
+                />
+                {message && (
+                    <p className="mt-2 p-2 bg-blue-100 rounded">You typed: "{message}"</p>
+                )}
+            </div>
+
+            {/* Display the list */}
         </div>
     );
 
