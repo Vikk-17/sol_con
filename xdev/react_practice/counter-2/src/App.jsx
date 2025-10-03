@@ -1,100 +1,95 @@
 import { useState } from "react";
 import './App.css'
 
-
 function App() {
-    const [count, setCount] = useState(0); 
+    const [theme, setTheme] = useState('light');
+    const [count, setCount] = useState(0);
     const [step, setStep] = useState(1);
-    const increase = () => setCount(count + step);
-    const decrease = () => setCount(count - step);
-    const reset = () => setCount(0);
+    const [isAutoCount, setIsAutoCount] = useState(false); 
+    const [history, setHistory] = useState([0]);
+
+    // Event handler function 
+    const increment = () => setCount(count + step); 
+    const decrement = () => setCount(count - step); 
+    const reset = () => setCount(0); 
+    const handleStepChange = (newStep) => {
+        setStep(newStep);
+    }
+
+    const themeClasses = theme === "dark" ? "bg-gray-800 text-white" : "bg-white text-gray-800";
+
+    const buttonClasses = theme === "dark" ? "bg-gray-800 hover:bg-gray-500 text-white" : "bg-blue-500 hover:bg-blue-600 text-white";
 
     return (
-        <div className="text-center mt-8">
-            <h1 className="m-10 font-[800] text-5xl">Counter App</h1>
-            <div>
-                {/* Conditional Message */}
-                {count === 0 && (
-                    <div>
-                    <p className="font-[500] text-4xl">{count}</p>
-                    <p>Starting point</p>
-                    </div>
-                )}
-                {count > 0 && (
-                    <div>
-                    <p className=" text-green-500 text-4xl font-[500] ">{count}</p>
-                    <p>Positive territory</p>
-                    </div>
-                )}
-                {count < 0 && (
-                    <div>
-                    <p className="text-red-500 text-4xl font-[500] ">{count}</p>
-                    <p>Negative territory</p>
-                    </div>
-                )}
-
-            </div>  
-
-            {/* Operational Buttons */}
-            <div>
-                <Button operation={decrease} name={-step} />
-                <Button operation={reset} name="Reset" />
-                <Button operation={increase} name={+step} />
-            </div>
-            {/* Step size buttons */}
-            <div className="mt-2">
-                <h1>Step Size</h1>
-                <StepButton step="1" /> 
-                <StepButton step="2" /> 
-                <StepButton step="5" /> 
-                <StepButton step="10" /> 
+        <div className={`min-h-screen p-8 transition-colors duration-300 ${themeClasses}`}>
+            <div className="max-w-2xl mx-auto">
+                <Header theme={theme} onThemeToggle={() => {
+                setTheme(theme === 'light' ? "dark" : "light")
+                }}/> 
+                
+                {/* Main counter display */}
+                <div className="text-center mb-8">
+                    <CountDisplay count={count} theme={theme} /> 
+                </div>
+                
+                {/* Control buttons */}
+                <div className="flex justify-center gap-4 mb-8">
+                   <CounterButton 
+                        onClick={decrement}
+                        disabled={isAutoCount}
+                        className={buttonClasses}
+                    > - {step} </CounterButton>
+                </div>
             </div>
         </div>
     )
 }
 
-
-{/* Header */}
 const Header = ({ theme, onThemeToggle }) => {
     return (
         <div className="flex justify-between items-center mb-8">
-            <h1 className="text-3xl font-bold">Counter App</h1>
+            <h1 className="text-3xl font-bold">
+                Counter App
+            </h1>
             <button
                 onClick={onThemeToggle}
-                className="px-4 py-2 rounded-lg bg-gray-500 hover:bg-gray-400 text-white transition-colors"
+                className="px-4 py-2 rounded-lg bg-gray-500 hover:bg-gray-400 text-white"
             >
-                {theme === "light"? "🌙": "☀️"}
-                {theme == "light" ? "Dark": "Light"}
+                {theme==="light" ? '🌙 Dark' : '☀️ Light'}
             </button>
+        </div>
+    )
+}
+
+
+const CountDisplay = ({ count, theme }) => {
+    const getCountColor = () => {
+        if(count > 0) return "text-green-500";
+        if(count < 0) return 'text-red-500';
+        return theme === "dark" ? "text-white" : "text-gray-800";
+    };
+
+    return (
+        <div className="mb-4">
+           <div className={`text-8xl font-bold ${getCountColor()} transition-colors duration-300`}>
+                {count}
+           </div>
+            <div>
+                {count === 0 ? "Starting point" : count > 0 ? "Positive territory" : "Negative territory"}
+            </div>
         </div>
     );
 }
 
-{/* Count Display function */}
-const CountDisplay = (count, theme) => {
-    if(count > 0) return "text-green-500";
-    if(count < 0) return "text-red-500";
-    return theme === "dark" ? "text-white" : "text-gray-800";
-};
 
-
-
-const Button = ({ operation, name }) => {
+const CounterButton = ({ onClick, disabled, className, children }) => {
     return (
-        <button
-            onClick={operation}
-            className="p-2 m-1 bg-blue-500 text-white rounded hover:bg-blue-600" 
+        <button 
+            className={`px-6 py-3 rounded-lg font-semibold transition-all duration-200 ${disabled ? 'opacity-50 cursor-not-allowed' : 'transform hover:scale-105'} ${className}`}
         >
-            {name}
+            {children}
         </button>
     );
 }
 
-const StepButton = ({ step }) => {
-    return (
-        <button className="p-2 m-1 bg-gray-800 text-black rounded">
-            {step}
-        </button>
-    )
-}
 export default App
