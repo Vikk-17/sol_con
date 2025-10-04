@@ -16,21 +16,21 @@
 //     }, 3000);
 // }, 1000);
 
-function step3() {
-    console.log("Goodbye!");
-}
-
-function step2() {
-    console.log("How are you?");
-    setTimeout(step3, 5000)
-}
-
-function step1() {
-    console.log("Hello there");
-    setTimeout(step2, 3000);
-}
-
-setTimeout(step1, 1000);
+// function step3() {
+//     console.log("Goodbye!");
+// }
+//
+// function step2() {
+//     console.log("How are you?");
+//     setTimeout(step3, 5000)
+// }
+//
+// function step1() {
+//     console.log("Hello there");
+//     setTimeout(step2, 3000);
+// }
+//
+// setTimeout(step1, 1000);
 
 
 
